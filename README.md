@@ -4,20 +4,6 @@ Sistema web para gestão de estoque de uma revenda de automóveis, desenvolvido 
 
 ---
 
-## 📋 Sumário
-
-- [Tecnologias](#tecnologias)
-- [Funcionalidades](#funcionalidades)
-- [Arquitetura](#arquitetura)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Como Rodar](#como-rodar)
-- [Rotas do Sistema](#rotas-do-sistema)
-- [Testes](#testes)
-- [Banco de Dados](#banco-de-dados)
-- [Próximas Evoluções](#próximas-evoluções)
-
----
-
 ## Tecnologias
 
 | Tecnologia | Versão | Uso |
