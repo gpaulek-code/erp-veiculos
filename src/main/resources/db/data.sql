@@ -1,0 +1,1 @@
+-- Arquivo limpo para inicialização sem dados

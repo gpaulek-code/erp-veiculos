@@ -1,0 +1,49 @@
+# ─── Maven ────────────────────────────────────────
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ─── IDE — IntelliJ IDEA ──────────────────────────
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ─── IDE — Eclipse ────────────────────────────────
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ─── IDE — VS Code ────────────────────────────────
+.vscode/
+
+# ─── Spring Boot ──────────────────────────────────
+spring-shell.log
+
+# ─── Sistema Operacional ──────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Logs ─────────────────────────────────────────
+*.log
+logs/
+
+# ─── Variáveis de ambiente locais ─────────────────
+.env
+.env.local
+
+# ─── Arquivos de build gerados ────────────────────
+*.jar
+*.war
+*.ear
+
+# ─── Locais / Extras ──────────────────────────────
+ControleCar.zip
+.tools/
+data/
+

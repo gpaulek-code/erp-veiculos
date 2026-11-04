@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Revisar Importação')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+<div id="main-wrapper">
+<main class="container-fluid py-4 flex-grow-1">
+
+    <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-clipboard-check fs-3 text-warning me-3"></i>
+        <div>
+            <h2 class="mb-0 fw-bold">Revisar Importação</h2>
+            <small class="text-muted">Confira os dados detectados. Campos em <span class="text-danger fw-semibold">vermelho</span> estão faltando — preencha antes de salvar.</small>
+        </div>
+    </div>
+
+    <div class="alert alert-warning d-flex align-items-center gap-2 py-2 mb-3">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>Defina a <strong>localização</strong> de cada veículo. O valor FIPE é buscado automaticamente — aguarde o carregamento.</span>
+    </div>
+
+    <form th:action="@{/importacao/salvar}" method="post" id="formImportar">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" name="total" th:value="${#lists.size(veiculos)}"/>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0" style="font-size:.82rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width:32px;">#</th>
+                                <th>Placa</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Ano</th>
+                                <th>Cor</th>
+                                <th>Valor FIPE (R$)</th>
+                                <th class="text-warning">📍 Localização *</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="v, i : ${veiculos}" th:id="'row-' + ${i.index}">
+                                <td class="text-muted" th:text="${i.index + 1}"></td>
+
+                                <!-- Placa -->
+                                <td>
+                                    <input type="text"
+                                           th:name="'placa_' + ${i.index}"
+                                           th:value="${v.placa}"
+                                           th:classappend="${v.faltaPlaca} ? 'border-danger text-danger' : ''"
+                                           class="form-control form-control-sm"
+                                           style="min-width:90px" maxlength="8"
+                                           th:placeholder="${v.faltaPlaca} ? '⚠ Faltando' : ''"/>
+                                </td>
+
+                                <!-- Marca -->
+                                <td>
+                                    <input type="text"
+                                           th:name="'marca_' + ${i.index}"
+                                           th:value="${v.marca}"
+                                           th:classappend="${v.faltaMarca} ? 'border-danger text-danger' : ''"
+                                           class="form-control form-control-sm marca-input"
+                                           style="min-width:90px"
+                                           th:placeholder="${v.faltaMarca} ? '⚠ Faltando' : ''"/>
+                                </td>
+
+                                <!-- Modelo -->
+                                <td>
+                                    <input type="text"
+                                           th:name="'modelo_' + ${i.index}"
+                                           th:value="${v.modelo}"
+                                           th:classappend="${v.faltaModelo} ? 'border-danger text-danger' : ''"
+                                           class="form-control form-control-sm modelo-input"
+                                           style="min-width:120px"
+                                           th:placeholder="${v.faltaModelo} ? '⚠ Faltando' : ''"/>
+                                </td>
+
+                                <!-- Ano -->
+                                <td>
+                                    <input type="text"
+                                           th:name="'ano_' + ${i.index}"
+                                           th:value="${v.ano}"
+                                           th:classappend="${v.faltaAno} ? 'border-danger text-danger' : ''"
+                                           class="form-control form-control-sm ano-input"
+                                           style="min-width:65px" maxlength="9"
+                                           th:placeholder="${v.faltaAno} ? '⚠' : ''"/>
+                                </td>
+
+                                <!-- Cor -->
+                                <td>
+                                    <input type="text"
+                                           th:name="'cor_' + ${i.index}"
+                                           th:value="${v.cor}"
+                                           th:classappend="${v.faltaCor} ? 'border-danger text-danger' : ''"
+                                           class="form-control form-control-sm"
+                                           style="min-width:80px"
+                                           th:placeholder="${v.faltaCor} ? '⚠ Faltando' : ''"/>
+                                </td>
+
+                                <!-- Valor FIPE -->
+                                <td>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <input type="text"
+                                               th:name="'valor_' + ${i.index}"
+                                               th:value="${v.valor}"
+                                               class="form-control form-control-sm valor-input"
+                                               style="min-width:100px"
+                                               placeholder="Buscando FIPE..."/>
+                                        <span class="fipe-status" style="font-size:.7rem; white-space:nowrap;"></span>
+                                    </div>
+                                </td>
+
+                                <!-- Localização -->
+                                <td>
+                                    <select th:name="'status_' + ${i.index}"
+                                            class="form-select form-select-sm"
+                                            style="min-width:110px" required>
+                                        <option th:each="s : ${statusList}"
+                                                th:value="${s.name()}"
+                                                th:text="${s.descricao}"
+                                                th:selected="${s.name() == v.detectarStatus()}"></option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-light border mb-3 d-flex gap-4 flex-wrap" style="font-size:.8rem;">
+            <span><strong th:text="${veiculos.size()}"></strong> veículos detectados</span>
+            <span id="fipeProgresso" class="text-info">
+                <i class="bi bi-hourglass-split me-1"></i>Buscando valores FIPE...
+            </span>
+        </div>
+
+        <div class="d-flex gap-3">
+            <a href="/importacao" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Voltar
+            </a>
+            <button type="submit" class="btn btn-success px-4 fw-semibold">
+                <i class="bi bi-check-circle me-2"></i>Salvar Todos
+            </button>
+        </div>
+    </form>
+</main>
+
+<script>
+const BASE_FIPE = 'https://parallelum.com.br/fipe/api/v1/carros';
+let marcasCache = null;
+
+async function getMarcas() {
+    if (marcasCache) return marcasCache;
+    const r = await fetch(`${BASE_FIPE}/marcas`);
+    marcasCache = await r.json();
+    return marcasCache;
+}
+
+function normalizar(s) {
+    return (s || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9 ]/g, '').trim();
+}
+
+function melhorMatch(lista, campo, busca) {
+    const b = normalizar(busca).split(' ')[0];
+    return lista.find(item => normalizar(item[campo]).startsWith(b))
+        || lista.find(item => normalizar(item[campo]).includes(b))
+        || null;
+}
+
+async function buscarFipeLinha(row) {
+    const marca  = row.querySelector('.marca-input')?.value?.trim();
+    const modelo = row.querySelector('.modelo-input')?.value?.trim();
+    const anoRaw = row.querySelector('.ano-input')?.value?.trim();
+    const valorInput = row.querySelector('.valor-input');
+    const status = row.querySelector('.fipe-status');
+
+    if (!marca || !modelo || !anoRaw) {
+        if (status) status.innerHTML = '';
+        return;
+    }
+
+    const ano = anoRaw.split('/')[0];
+
+    try {
+        const marcas = await getMarcas();
+        const marcaObj = melhorMatch(marcas, 'nome', marca);
+        if (!marcaObj) { if(status) status.innerHTML = '<span class="text-muted">marca?</span>'; return; }
+
+        const modRes = await fetch(`${BASE_FIPE}/marcas/${marcaObj.codigo}/modelos`);
+        const modData = await modRes.json();
+        const modeloObj = melhorMatch(modData.modelos, 'nome', modelo);
+        if (!modeloObj) { if(status) status.innerHTML = '<span class="text-muted">modelo?</span>'; return; }
+
+        const anosRes = await fetch(`${BASE_FIPE}/marcas/${marcaObj.codigo}/modelos/${modeloObj.codigo}/anos`);
+        const anos = await anosRes.json();
+        const anoObj = anos.find(a => a.nome.startsWith(ano)) || anos[0];
+        if (!anoObj) { if(status) status.innerHTML = '<span class="text-muted">ano?</span>'; return; }
+
+        const precoRes = await fetch(`${BASE_FIPE}/marcas/${marcaObj.codigo}/modelos/${modeloObj.codigo}/anos/${anoObj.codigo}`);
+        const preco = await precoRes.json();
+
+        const valorNum = preco.Valor.replace('R$ ','').replace('.','').replace(',','.');
+        if (valorInput) valorInput.value = parseFloat(valorNum).toFixed(2);
+        if (status) status.innerHTML = `<span class="text-success" title="${preco.Marca} ${preco.Modelo} ${preco.AnoModelo}">✓ FIPE</span>`;
+
+    } catch(e) {
+        if (status) status.innerHTML = '<span class="text-muted">-</span>';
+    }
+}
+
+// Buscar FIPE para todas as linhas em paralelo (lotes de 5 para não sobrecarregar)
+async function buscarTodosFipe() {
+    const rows = document.querySelectorAll('tbody tr');
+    const total = rows.length;
+    let concluidos = 0;
+
+    async function processarLote(inicio) {
+        const lote = Array.from(rows).slice(inicio, inicio + 5);
+        await Promise.all(lote.map(r => buscarFipeLinha(r).then(() => {
+            concluidos++;
+            document.getElementById('fipeProgresso').innerHTML =
+                `<i class="bi bi-hourglass-split me-1"></i>Buscando FIPE: ${concluidos}/${total}`;
+        })));
+        if (inicio + 5 < total) await processarLote(inicio + 5);
+        else document.getElementById('fipeProgresso').innerHTML =
+            `<i class="bi bi-check-circle-fill me-1 text-success"></i><span class="text-success">Valores FIPE carregados (${total} veículos)</span>`;
+    }
+
+    await processarLote(0);
+}
+
+document.addEventListener('DOMContentLoaded', buscarTodosFipe);
+</script>
+
+<script th:replace="~{fragments/layout :: sidebar-scripts}"></script>
+</div>
+</body>
+</html>

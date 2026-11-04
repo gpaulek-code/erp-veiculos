@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalhe do Veículo')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+<div id="main-wrapper">
+
+
+<main class="container py-4 flex-grow-1">
+
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-car-front-fill fs-3 text-primary me-3"></i>
+            <div>
+                <h2 class="mb-0 fw-bold" th:text="${veiculo.marca + ' ' + veiculo.modelo}">Veículo</h2>
+                <small class="text-muted" th:text="'Placa: ' + ${veiculo.placa}"></small>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/veiculos/{id}/movimentacoes(id=${veiculo.id})}" class="btn btn-outline-primary">
+                <i class="bi bi-clock-history me-1"></i>Histórico
+            </a>
+            <a th:href="@{/veiculos/{id}/editar(id=${veiculo.id})}" class="btn btn-primary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a th:href="@{/veiculos}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="row g-4">
+
+                <div class="col-12 col-md-6">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                        <tr>
+                            <th class="text-muted w-40" style="width:40%">Placa</th>
+                            <td class="fw-semibold" th:text="${veiculo.placa}">-</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Marca</th>
+                            <td th:text="${veiculo.marca}">-</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Modelo</th>
+                            <td th:text="${veiculo.modelo}">-</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Ano</th>
+                            <td th:text="${veiculo.ano}">-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                        <tr>
+                            <th class="text-muted" style="width:40%">Cor</th>
+                            <td th:text="${veiculo.cor}">-</td>
+                        </tr>
+                        <tr>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Valor</th>
+                            <td class="fw-semibold text-success"
+                                th:text="${#numbers.formatCurrency(veiculo.valor)}">-
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Status</th>
+                            <td>
+                                <span th:text="${veiculo.statusDescricao}"
+                                      th:classappend="${veiculo.status.name() == 'VENDIDO'}     ? 'badge bg-danger'     :
+                                                      (${veiculo.status.name() == 'MANUTENCAO'} ? 'badge bg-warning text-dark' :
+                                                      'badge bg-success')"
+                                      class="badge fs-6">
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-12">
+                    <hr class="my-1"/>
+                    <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i>
+                        Cadastrado em:
+                        <span th:text="${#temporals.format(veiculo.criadoEm, 'dd/MM/yyyy HH:mm')}"></span>
+                        &nbsp;|&nbsp;
+                        Atualizado em:
+                        <span th:text="${#temporals.format(veiculo.atualizadoEm, 'dd/MM/yyyy HH:mm')}"></span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:replace="~{fragments/layout :: sidebar-scripts}"></script>
+</div><!-- fim main-wrapper -->
+</body>
+</html>

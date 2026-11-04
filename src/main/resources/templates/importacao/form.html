@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Importar Veículos')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+<div id="main-wrapper">
+<main class="container py-4 flex-grow-1">
+
+    <div class="d-flex align-items-center mb-4">
+        <i class="bi bi-file-earmark-arrow-up fs-3 text-warning me-3"></i>
+        <div>
+            <h2 class="mb-0 fw-bold">Importar Veículos</h2>
+            <small class="text-muted">Importe uma lista via Excel ou PDF</small>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Como funciona:</strong> Envie um arquivo Excel (.xlsx) com colunas
+                        <em>placa, marca, modelo, ano, cor, valor</em>
+                        — ou um PDF com placas no padrão brasileiro.
+                        Após o upload você define onde cada veículo está antes de salvar.
+                    </div>
+
+                    <form th:action="@{/importacao/upload}" method="post" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Selecione o arquivo</label>
+                            <input type="file" name="arquivo" class="form-control form-control-lg"
+                                   accept=".xlsx,.xls,.pdf" required/>
+                            <div class="form-text">Formatos aceitos: .xlsx, .xls, .pdf</div>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 py-2 fw-semibold">
+                            <i class="bi bi-upload me-2"></i>Carregar Arquivo
+                        </button>
+                    </form>
+
+                    <hr class="my-4"/>
+
+                    <div>
+                        <h6 class="fw-semibold mb-3"><i class="bi bi-download me-2"></i>Modelo Excel para download</h6>
+                        <a href="/importacao/modelo" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Baixar modelo .xlsx
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:replace="~{fragments/layout :: sidebar-scripts}"></script>
+</div><!-- fim main-wrapper -->
+</body>
+</html>

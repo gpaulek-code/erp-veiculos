@@ -1,0 +1,47 @@
+/* ═══════════════════════════════════════════
+   ERP Veículos — Estilos customizados
+   Complementa o Bootstrap 5
+════════════════════════════════════════════ */
+
+/* Transição suave nos cards */
+.card {
+    transition: box-shadow 0.2s ease;
+}
+.card:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.10) !important;
+}
+
+/* Navbar ativa */
+.navbar .nav-link.active {
+    font-weight: 600;
+    color: #fff !important;
+    border-bottom: 2px solid #ffc107;
+}
+
+/* Placa em maiúsculo */
+input[name="placa"] {
+    text-transform: uppercase;
+    letter-spacing: .08rem;
+    font-weight: 600;
+}
+
+/* Badges de status com tamanho mínimo */
+.badge {
+    font-size: .78rem;
+    padding: .35em .65em;
+}
+
+/* Tabela mais compacta */
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Paginação compacta */
+.pagination {
+    gap: 2px;
+}
+
+/* Footer fixo ao fundo */
+footer {
+    font-size: .85rem;
+}

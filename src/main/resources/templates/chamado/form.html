@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Suporte')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+<div id="main-wrapper">
+<main class="container py-4 flex-grow-1">
+
+    <div class="d-flex align-items-center mb-4">
+        <i class="bi bi-headset fs-3 text-warning me-3"></i>
+        <div>
+            <h2 class="mb-0 fw-bold">Suporte / Chamado</h2>
+            <small class="text-muted">Envie uma mensagem para nossa equipe</small>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div th:if="${sucesso}" class="alert alert-success">
+                <i class="bi bi-check-circle-fill me-2"></i><span th:text="${sucesso}"></span>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form th:action="@{/chamado/enviar}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Assunto</label>
+                            <select name="assunto" class="form-select" required>
+                                <option value="">Selecione o assunto...</option>
+                                <option>Dúvida sobre o sistema</option>
+                                <option>Problema técnico</option>
+                                <option>Solicitação de nova funcionalidade</option>
+                                <option>Erro ao importar dados</option>
+                                <option>Outros</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Mensagem</label>
+                            <textarea name="mensagem" class="form-control" rows="6"
+                                      placeholder="Descreva sua dúvida ou problema em detalhes..."
+                                      required maxlength="2000"></textarea>
+                            <div class="form-text">Máximo 2000 caracteres</div>
+                        </div>
+                        <button type="submit" class="btn btn-warning fw-semibold w-100 py-2">
+                            <i class="bi bi-send-fill me-2"></i>Enviar Chamado
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body p-3">
+                    <p class="mb-1 fw-semibold"><i class="bi bi-clock me-2 text-warning"></i>Horário de atendimento</p>
+                    <p class="text-muted small mb-0">Segunda a sexta, das 8h às 18h. Respondemos em até 24 horas úteis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:replace="~{fragments/layout :: sidebar-scripts}"></script>
+</div><!-- fim main-wrapper -->
+</body>
+</html>
